@@ -1,0 +1,11 @@
+item.coinBronze.name=Bronze Coin
+item.coinSilver.name=Silver Coin
+item.coinGold.name=Gold Coin
+
+coins.stacked=Coins stacked.
+coins.unstacked=Coins unstacked.
+coins.repaired=Item repaired.
+coins.cantrepair=Item is not damaged or can't be repaired.
+coins.notenough.bronze=You don't have enough coins in your inventory. The repairing costs %d bronze coins.
+coins.notenough.silver=You don't have enough coins in your inventory. The repairing costs %d silver coins.
+coins.notenough.gold=You don't have enough coins in your inventory. The repairing costs %d gold coins.
