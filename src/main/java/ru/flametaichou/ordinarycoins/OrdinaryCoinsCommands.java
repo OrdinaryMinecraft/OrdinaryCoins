@@ -8,6 +8,7 @@ import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ChatComponentText;
@@ -146,7 +147,7 @@ public class OrdinaryCoinsCommands extends CommandBase
             		ItemStack item = player.getHeldItem();
 	            	if (countCoins >= ConfigHelper.repairCost)
 	            	{
-	            		if (item.isItemDamaged())
+	            		if (item != null && item.isItemDamaged())
 	            		{
 		            		inventory.clearInventory(coin, 0);
 		            		item.setItemDamage(0);
