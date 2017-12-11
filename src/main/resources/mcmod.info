@@ -1,0 +1,16 @@
+[
+{
+  "modid": "ordinarycoins",
+  "name": "Ordinary Coins",
+  "description": "Simple coins for your server economy.",
+  "version": "${version}",
+  "mcversion": "${mcversion}",
+  "url": "",
+  "updateUrl": "",
+  "authorList": ["flametaichou"],
+  "credits": "",
+  "logoFile": "",
+  "screenshots": [],
+  "dependencies": []
+}
+]
