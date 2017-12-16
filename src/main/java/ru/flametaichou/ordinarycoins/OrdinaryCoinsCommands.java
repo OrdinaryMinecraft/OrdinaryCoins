@@ -105,7 +105,7 @@ public class OrdinaryCoinsCommands extends CommandBase {
                 return;
             }
 
-            if (args[0].equals("repair"))
+            if (args[0].equals("repair") && ConfigHelper.repair)
             {
                 if(sender instanceof EntityPlayer)
                 {

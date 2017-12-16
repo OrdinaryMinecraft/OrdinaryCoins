@@ -5,6 +5,7 @@ item.ordinarycoins.coinGold.name=Gold Coin
 coins.stacked=Coins stacked.
 coins.unstacked=Coins unstacked.
 coins.repaired=Item repaired.
+coins.repair.disabled=Repairing by coins is disabled.
 coins.cantrepair=Item is not damaged or can't be repaired.
 coins.notenough.bronze=You don't have enough coins in your inventory. The repairing costs %d bronze coins.
 coins.notenough.silver=You don't have enough coins in your inventory. The repairing costs %d silver coins.

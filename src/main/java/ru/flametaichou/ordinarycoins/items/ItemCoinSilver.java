@@ -14,12 +14,5 @@ public class ItemCoinSilver extends Item {
         setRegistryName("coinSilver");        // The unique name (within your mod) that identifies this item
         setUnlocalizedName(OrdinaryCoinsBase.MODID + ".coinSilver");     // Used for localization (en_US.lang)
         this.setCreativeTab(CreativeTabs.MISC);
-        initModel();
     }
-
-    @SideOnly(Side.CLIENT)
-    public void initModel() {
-        ModelLoader.setCustomModelResourceLocation(this, 0, new ModelResourceLocation(getRegistryName(), "inventory"));
-    }
-
 }
