@@ -22,6 +22,9 @@ public class ConfigHelper {
 	public static int coinTypeWitch;
 	public static int repairCost;
 	public static int repairCoinType;
+
+	public static boolean premiumRepair;
+	public static boolean playersRepair;
 	
 	
 	public static void setupConfig(Configuration config) {
@@ -41,7 +44,9 @@ public class ConfigHelper {
 			coinTypeWitch = config.get("Coins Type", "coinTypeWitch", 0, "Which coins use to drop from witches? (0 - bronze, 1 - silver, 2 - gold)").getInt(0);
 			repairCost = config.get("Repairing", "repairCost", 50, "How much does the item repairing?").getInt(50);
 			repairCoinType = config.get("Repairing", "repairCoinType", 1, "Which coins use to repairing? (0 - bronze, 1 - silver, 2 - gold)").getInt(0);
-			
+
+			premiumRepair = config.get("Repairing", "premiumRepair", false, "Allow free premium repair? (for servers)").getBoolean(false);
+			playersRepair = config.get("Repairing", "playersRepair", true, "Allow players repair items with coins?").getBoolean(true);
 		} catch(Exception e) {
 			System.out.println("Error loading config file!");
 		} finally {

@@ -120,62 +120,125 @@ public class OrdinaryCoinsCommands extends CommandBase
             
             if (argString[0].equals("repair"))
             {
-	            if(sender instanceof EntityPlayer)
-	            {
-	            	EntityPlayer player = (EntityPlayer)sender;
-	            	InventoryPlayer inventory = player.inventory;
+            	if (argString.length < 2 && ConfigHelper.playersRepair) {
 
-		            Item coin = OrdinaryCoinsBase.coinSilver;
-		        	switch (ConfigHelper.repairCoinType)
-		        	{
-		        		case 0:
-		        			coin = OrdinaryCoinsBase.coinBronze;
-		        			break;
-		        		case 1:
-		        			coin = OrdinaryCoinsBase.coinSilver;
-		        			break;
-		        		case 2:
-		        			coin = OrdinaryCoinsBase.coinGold;
-		        			break;
-		        	}
-		        	
-	            	int countCoins = 0;
-	            	for (ItemStack s : inventory.mainInventory)
-	            	{
-	                	if (s != null && s.getItem() == coin)countCoins = countCoins + s.stackSize;
-	            	}
-            		ItemStack item = player.getHeldItem();
-	            	if (countCoins >= ConfigHelper.repairCost)
-	            	{
-	            		if (item != null && item.isItemDamaged())
-	            		{
-		            		inventory.clearInventory(coin, 0);
-		            		item.setItemDamage(0);
-				            sender.addChatMessage(new ChatComponentTranslation("coins.repaired"));
-		    	            inventory.addItemStackToInventory(new ItemStack(coin, countCoins - 50));
-	            		}
-		            	else
-		            	{
-				            sender.addChatMessage(new ChatComponentTranslation("coins.cantrepair"));
-		            	}
-	            	}
-	            	else
-	            	{
-			        	switch (ConfigHelper.repairCoinType)
-			        	{
-			        		case 0:
-			            		sender.addChatMessage(new ChatComponentTranslation("coins.notenough.bronze", ConfigHelper.repairCost));
-			        			break;
-			        		case 1:
-			            		sender.addChatMessage(new ChatComponentTranslation("coins.notenough.silver", ConfigHelper.repairCost));
-			        			break;
-			        		case 2:
-			            		sender.addChatMessage(new ChatComponentTranslation("coins.notenough.gold", ConfigHelper.repairCost));
-			        			break;
-			        	}
-	            	}
-	            }
-	            return;
+					if(sender instanceof EntityPlayer)
+					{
+						EntityPlayer player = (EntityPlayer)sender;
+						InventoryPlayer inventory = player.inventory;
+
+						Item coin = OrdinaryCoinsBase.coinSilver;
+						switch (ConfigHelper.repairCoinType)
+						{
+							case 0:
+								coin = OrdinaryCoinsBase.coinBronze;
+								break;
+							case 1:
+								coin = OrdinaryCoinsBase.coinSilver;
+								break;
+							case 2:
+								coin = OrdinaryCoinsBase.coinGold;
+								break;
+						}
+
+						int countCoins = 0;
+						for (ItemStack s : inventory.mainInventory)
+						{
+							if (s != null && s.getItem() == coin)countCoins = countCoins + s.stackSize;
+						}
+						ItemStack item = player.getHeldItem();
+						if (countCoins >= ConfigHelper.repairCost)
+						{
+							if (item != null && item.isItemDamaged())
+							{
+								inventory.clearInventory(coin, 0);
+								item.setItemDamage(0);
+								sender.addChatMessage(new ChatComponentTranslation("coins.repaired"));
+								inventory.addItemStackToInventory(new ItemStack(coin, countCoins - 50));
+								player.worldObj.playSoundEffect(player.posX, player.posY, player.posZ, "random.anvil_use", 1.1F, 1.1F);
+							}
+							else
+							{
+								sender.addChatMessage(new ChatComponentTranslation("coins.cantrepair"));
+							}
+						}
+						else
+						{
+							switch (ConfigHelper.repairCoinType)
+							{
+								case 0:
+									sender.addChatMessage(new ChatComponentTranslation("coins.notenough.bronze", ConfigHelper.repairCost));
+									break;
+								case 1:
+									sender.addChatMessage(new ChatComponentTranslation("coins.notenough.silver", ConfigHelper.repairCost));
+									break;
+								case 2:
+									sender.addChatMessage(new ChatComponentTranslation("coins.notenough.gold", ConfigHelper.repairCost));
+									break;
+							}
+						}
+					}
+					return;
+				} else {
+
+					if (!(sender instanceof EntityPlayer))
+					{
+						EntityPlayer player = world.getPlayerEntityByName(argString[1]);
+						InventoryPlayer inventory = player.inventory;
+
+						Item coin = OrdinaryCoinsBase.coinSilver;
+						switch (ConfigHelper.repairCoinType)
+						{
+							case 0:
+								coin = OrdinaryCoinsBase.coinBronze;
+								break;
+							case 1:
+								coin = OrdinaryCoinsBase.coinSilver;
+								break;
+							case 2:
+								coin = OrdinaryCoinsBase.coinGold;
+								break;
+						}
+
+						int countCoins = 0;
+						for (ItemStack s : inventory.mainInventory)
+						{
+							if (s != null && s.getItem() == coin)countCoins = countCoins + s.stackSize;
+						}
+						ItemStack item = player.getHeldItem();
+						if (countCoins >= ConfigHelper.repairCost)
+						{
+							if (item != null && item.isItemDamaged())
+							{
+								inventory.clearInventory(coin, 0);
+								item.setItemDamage(0);
+								player.addChatMessage(new ChatComponentTranslation("coins.repaired"));
+								inventory.addItemStackToInventory(new ItemStack(coin, countCoins - 50));
+								player.worldObj.playSoundEffect(player.posX, player.posY, player.posZ, "random.anvil_use", 1.1F, 1.1F);
+							}
+							else
+							{
+								player.addChatMessage(new ChatComponentTranslation("coins.cantrepair"));
+							}
+						}
+						else
+						{
+							switch (ConfigHelper.repairCoinType)
+							{
+								case 0:
+									player.addChatMessage(new ChatComponentTranslation("coins.notenough.bronze", ConfigHelper.repairCost));
+									break;
+								case 1:
+									player.addChatMessage(new ChatComponentTranslation("coins.notenough.silver", ConfigHelper.repairCost));
+									break;
+								case 2:
+									player.addChatMessage(new ChatComponentTranslation("coins.notenough.gold", ConfigHelper.repairCost));
+									break;
+							}
+						}
+					}
+					return;
+				}
 	        }
         }
     } 
