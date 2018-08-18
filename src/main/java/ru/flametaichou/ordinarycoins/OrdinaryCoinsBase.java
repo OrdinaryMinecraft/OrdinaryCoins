@@ -21,6 +21,7 @@ public class OrdinaryCoinsBase {
 	public void serverLoad(FMLServerStartingEvent event)
 	{
 		event.registerServerCommand(new OrdinaryCoinsCommands());
+		event.registerServerCommand(new OrdinaryCoinsPremium());
 	}
 	
 	@EventHandler
