@@ -45,7 +45,7 @@ public class ConfigHelper {
 			repair = config.get("Repairing","repair",true,"Enable or disable repairing items by coins").getBoolean(true);
 			repairCost = config.get("Repairing", "repairCost", 50, "How much does the item repairing?").getInt(50);
 			repairCoinType = config.get("Repairing", "repairCoinType", 1, "Which coins use to repairing? (0 - bronze, 1 - silver, 2 - gold)").getInt(0);
-			
+
 		} catch(Exception e) {
 			System.out.println("Error loading config file!");
 		} finally {

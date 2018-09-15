@@ -1,13 +1,19 @@
 package ru.flametaichou.ordinarycoins;
 
+        import net.minecraft.client.audio.Sound;
+        import net.minecraft.client.audio.SoundHandler;
         import net.minecraft.command.CommandBase;
         import net.minecraft.command.CommandException;
         import net.minecraft.command.ICommandSender;
         import net.minecraft.entity.player.EntityPlayer;
         import net.minecraft.entity.player.InventoryPlayer;
+        import net.minecraft.init.SoundEvents;
         import net.minecraft.item.Item;
         import net.minecraft.item.ItemStack;
         import net.minecraft.server.MinecraftServer;
+        import net.minecraft.util.ResourceLocation;
+        import net.minecraft.util.SoundCategory;
+        import net.minecraft.util.SoundEvent;
         import net.minecraft.util.math.BlockPos;
         import net.minecraft.util.text.TextComponentString;
         import net.minecraft.util.text.TextComponentTranslation;
@@ -109,27 +115,18 @@ public class OrdinaryCoinsCommands extends CommandBase {
             {
                 if(sender instanceof EntityPlayer)
                 {
+                    // From chat
                     EntityPlayer player = (EntityPlayer)sender;
                     InventoryPlayer inventory = player.inventory;
 
-                    Item coin = OrdinaryCoinsBase.coinSilver;
-                    switch (ConfigHelper.repairCoinType)
-                    {
-                        case 0:
-                            coin = OrdinaryCoinsBase.coinBronze;
-                            break;
-                        case 1:
-                            coin = OrdinaryCoinsBase.coinSilver;
-                            break;
-                        case 2:
-                            coin = OrdinaryCoinsBase.coinGold;
-                            break;
-                    }
+                    Item coin = pickCoinFromConfig();
 
                     int countCoins = 0;
                     for (ItemStack s : inventory.mainInventory)
                     {
-                        if (s != null && s.getItem() == coin)countCoins = countCoins + s.getCount();
+                        if (s != null && s.getItem() == coin) {
+                            countCoins = countCoins + s.getCount();
+                        }
                     }
                     ItemStack item = player.getHeldItemMainhand();
                     if (countCoins >= ConfigHelper.repairCost)
@@ -139,6 +136,8 @@ public class OrdinaryCoinsCommands extends CommandBase {
                             inventory.clearMatchingItems(coin,0, ConfigHelper.repairCost,null);
                             item.setItemDamage(0);
                             sender.sendMessage(new TextComponentTranslation("coins.repaired"));
+                            //TODO: send packet to client to play sound
+                            //player.world.playSound(player, player.posX, player.posY, player.posZ, SoundEvents.BLOCK_ANVIL_USE, SoundCategory.PLAYERS, 1.1F, 1.1F);
                         }
                         else
                         {
@@ -160,10 +159,77 @@ public class OrdinaryCoinsCommands extends CommandBase {
                                 break;
                         }
                     }
+                } else if (!(sender instanceof EntityPlayer))
+                {
+                    // From console
+                    if (args.length < 2) {
+                        System.out.println("Repair error: player name is not defined!");
+                        return;
+                    }
+                    EntityPlayer player = world.getPlayerEntityByName(args[1]);
+                    InventoryPlayer inventory = player.inventory;
+
+                    Item coin = pickCoinFromConfig();
+
+                    int countCoins = 0;
+                    for (ItemStack s : inventory.mainInventory)
+                    {
+                        if (s != null && s.getItem() == coin) {
+                            countCoins = countCoins + s.getCount();
+                        }
+                    }
+                    ItemStack item = player.getHeldItemMainhand();
+                    if (countCoins >= ConfigHelper.repairCost)
+                    {
+                        if (item != null && item.isItemDamaged())
+                        {
+                            inventory.clearMatchingItems(coin,0, ConfigHelper.repairCost,null);
+                            item.setItemDamage(0);
+                            player.sendMessage(new TextComponentTranslation("coins.repaired"));
+                            //TODO: send packet to client to play sound
+                            //player.world.playSound(player, player.posX, player.posY, player.posZ, SoundEvents.BLOCK_ANVIL_USE, SoundCategory.PLAYERS, 1.1F, 1.1F);
+                        }
+                        else
+                        {
+                            player.sendMessage(new TextComponentTranslation("coins.cantrepair"));
+                        }
+                    }
+                    else
+                    {
+                        switch (ConfigHelper.repairCoinType)
+                        {
+                            case 0:
+                                player.sendMessage(new TextComponentTranslation("coins.notenough.bronze", ConfigHelper.repairCost));
+                                break;
+                            case 1:
+                                player.sendMessage(new TextComponentTranslation("coins.notenough.silver", ConfigHelper.repairCost));
+                                break;
+                            case 2:
+                                player.sendMessage(new TextComponentTranslation("coins.notenough.gold", ConfigHelper.repairCost));
+                                break;
+                        }
+                    }
                 }
                 return;
             }
         }
+    }
+
+    private Item pickCoinFromConfig() {
+        Item coin = OrdinaryCoinsBase.coinSilver;
+        switch (ConfigHelper.repairCoinType)
+        {
+            case 0:
+                coin = OrdinaryCoinsBase.coinBronze;
+                break;
+            case 1:
+                coin = OrdinaryCoinsBase.coinSilver;
+                break;
+            case 2:
+                coin = OrdinaryCoinsBase.coinGold;
+                break;
+        }
+        return coin;
     }
 
     @Override
