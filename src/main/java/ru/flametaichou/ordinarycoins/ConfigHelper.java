@@ -23,6 +23,8 @@ public class ConfigHelper {
 	public static int repairCost;
 	public static int repairCoinType;
 
+	public static int coinsStackSize;
+
 	public static boolean premiumRepair;
 	public static boolean playersRepair;
 	
@@ -44,6 +46,8 @@ public class ConfigHelper {
 			coinTypeWitch = config.get("Coins Type", "coinTypeWitch", 0, "Which coins use to drop from witches? (0 - bronze, 1 - silver, 2 - gold)").getInt(0);
 			repairCost = config.get("Repairing", "repairCost", 50, "How much does the item repairing?").getInt(50);
 			repairCoinType = config.get("Repairing", "repairCoinType", 1, "Which coins use to repairing? (0 - bronze, 1 - silver, 2 - gold)").getInt(0);
+
+			coinsStackSize = config.get("Main", "coinsStackSize", 100, "How many coins should be in a stack? (100 means that 1 silver coin = 100 bronze coins, 1 gold = 100 silver)").getInt(100);
 
 			premiumRepair = config.get("Repairing", "premiumRepair", false, "Allow free premium repair? (for servers)").getBoolean(false);
 			playersRepair = config.get("Repairing", "playersRepair", true, "Allow players repair items with coins?").getBoolean(true);

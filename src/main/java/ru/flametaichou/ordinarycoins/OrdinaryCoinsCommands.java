@@ -82,15 +82,20 @@ public class OrdinaryCoinsCommands extends CommandBase
 	            	int countBronze = 0;
 	            	int countSilver = 0;
 	            	for (ItemStack s : inventory.mainInventory) {
-	                	if (s != null && s.getItem() instanceof ItemCoinBronze) countBronze = countBronze + s.stackSize;
-	                	if (s != null && s.getItem() instanceof ItemCoinSilver)countSilver = countSilver + s.stackSize;
+	                	if (s != null && s.getItem() instanceof ItemCoinBronze)
+						{
+							countBronze = countBronze + s.stackSize;
+						}
+	                	if (s != null && s.getItem() instanceof ItemCoinSilver) {
+	                		countSilver = countSilver + s.stackSize;
+						}
 		            }
 		            inventory.clearInventory(OrdinaryCoinsBase.coinBronze, 0);
 		            inventory.clearInventory(OrdinaryCoinsBase.coinSilver, 0);
-		            inventory.addItemStackToInventory(new ItemStack(OrdinaryCoinsBase.coinSilver, countBronze / 100));
-		            inventory.addItemStackToInventory(new ItemStack(OrdinaryCoinsBase.coinBronze, countBronze % 100));
-		            inventory.addItemStackToInventory(new ItemStack(OrdinaryCoinsBase.coinGold, countSilver / 100));
-		            inventory.addItemStackToInventory(new ItemStack(OrdinaryCoinsBase.coinSilver, countSilver % 100));
+		            inventory.addItemStackToInventory(new ItemStack(OrdinaryCoinsBase.coinSilver, countBronze / ConfigHelper.coinsStackSize));
+		            inventory.addItemStackToInventory(new ItemStack(OrdinaryCoinsBase.coinBronze, countBronze % ConfigHelper.coinsStackSize));
+		            inventory.addItemStackToInventory(new ItemStack(OrdinaryCoinsBase.coinGold, countSilver / ConfigHelper.coinsStackSize));
+		            inventory.addItemStackToInventory(new ItemStack(OrdinaryCoinsBase.coinSilver, countSilver % ConfigHelper.coinsStackSize));
 		            sender.addChatMessage(new ChatComponentTranslation("coins.stacked"));
 		          }
 	            return;
@@ -106,13 +111,19 @@ public class OrdinaryCoinsCommands extends CommandBase
 	            	int countSilver = 0;
 	            	for (ItemStack s : inventory.mainInventory)
 	            	{
-	                	if (s != null && s.getItem() instanceof ItemCoinGold) countGold = countGold + s.stackSize;
-	                	if (s != null && s.getItem() instanceof ItemCoinSilver)countSilver = countSilver + s.stackSize;
+	                	if (s != null && s.getItem() instanceof ItemCoinGold)
+						{
+							countGold = countGold + s.stackSize;
+						}
+	                	if (s != null && s.getItem() instanceof ItemCoinSilver)
+						{
+							countSilver = countSilver + s.stackSize;
+						}
 	            	}
 		            inventory.clearInventory(OrdinaryCoinsBase.coinGold, 0);
 		            inventory.clearInventory(OrdinaryCoinsBase.coinSilver, 0);
-		            inventory.addItemStackToInventory(new ItemStack(OrdinaryCoinsBase.coinSilver, countGold * 100));
-		            inventory.addItemStackToInventory(new ItemStack(OrdinaryCoinsBase.coinBronze, countSilver * 100));
+		            inventory.addItemStackToInventory(new ItemStack(OrdinaryCoinsBase.coinSilver, countGold * ConfigHelper.coinsStackSize));
+		            inventory.addItemStackToInventory(new ItemStack(OrdinaryCoinsBase.coinBronze, countSilver * ConfigHelper.coinsStackSize));
 		            sender.addChatMessage(new ChatComponentTranslation("coins.unstacked"));
 	            }
 	            return;
@@ -154,7 +165,7 @@ public class OrdinaryCoinsCommands extends CommandBase
 								inventory.clearInventory(coin, 0);
 								item.setItemDamage(0);
 								sender.addChatMessage(new ChatComponentTranslation("coins.repaired"));
-								inventory.addItemStackToInventory(new ItemStack(coin, countCoins - 50));
+								inventory.addItemStackToInventory(new ItemStack(coin, countCoins - ConfigHelper.repairCost));
 								player.worldObj.playSoundEffect(player.posX, player.posY, player.posZ, "random.anvil_use", 1.1F, 1.1F);
 							}
 							else
