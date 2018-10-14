@@ -13,7 +13,7 @@ import ru.flametaichou.ordinarycoins.items.ItemCoinBronze;
 import ru.flametaichou.ordinarycoins.items.ItemCoinGold;
 import ru.flametaichou.ordinarycoins.items.ItemCoinSilver;
 
-@Mod (modid = "ordinarycoins", name = "Ordinary Coins", version = "1.3")
+@Mod (modid = "ordinarycoins", name = "Ordinary Coins", version = "1.3.2")
 
 public class OrdinaryCoinsBase {
 	
