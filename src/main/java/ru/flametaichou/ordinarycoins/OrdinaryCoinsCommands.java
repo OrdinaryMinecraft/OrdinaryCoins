@@ -75,15 +75,21 @@ public class OrdinaryCoinsCommands extends CommandBase {
                     int countBronze = 0;
                     int countSilver = 0;
                     for (ItemStack s : inventory.mainInventory) {
-                        if (s != null && s.getItem() instanceof ItemCoinBronze) countBronze = countBronze + s.getCount();
-                        if (s != null && s.getItem() instanceof ItemCoinSilver)countSilver = countSilver + s.getCount();
+                        if (s != null && s.getItem() instanceof ItemCoinBronze)
+                        {
+                            countBronze = countBronze + s.getCount();
+                        }
+                        if (s != null && s.getItem() instanceof ItemCoinSilver)
+                        {
+                            countSilver = countSilver + s.getCount();
+                        }
                     }
                     inventory.clearMatchingItems(OrdinaryCoinsBase.coinBronze, 0,countBronze,null);
                     inventory.clearMatchingItems(OrdinaryCoinsBase.coinSilver, 0,countSilver,null);
-                    inventory.addItemStackToInventory(new ItemStack(OrdinaryCoinsBase.coinSilver, countBronze / 100));
-                    inventory.addItemStackToInventory(new ItemStack(OrdinaryCoinsBase.coinBronze, countBronze % 100));
-                    inventory.addItemStackToInventory(new ItemStack(OrdinaryCoinsBase.coinGold, countSilver / 100));
-                    inventory.addItemStackToInventory(new ItemStack(OrdinaryCoinsBase.coinSilver, countSilver % 100));
+                    inventory.addItemStackToInventory(new ItemStack(OrdinaryCoinsBase.coinSilver, countBronze / ConfigHelper.coinsStackSize));
+                    inventory.addItemStackToInventory(new ItemStack(OrdinaryCoinsBase.coinBronze, countBronze % ConfigHelper.coinsStackSize));
+                    inventory.addItemStackToInventory(new ItemStack(OrdinaryCoinsBase.coinGold, countSilver / ConfigHelper.coinsStackSize));
+                    inventory.addItemStackToInventory(new ItemStack(OrdinaryCoinsBase.coinSilver, countSilver % ConfigHelper.coinsStackSize));
                     sender.sendMessage(new TextComponentTranslation("coins.stacked"));
                 }
                 return;
@@ -99,13 +105,19 @@ public class OrdinaryCoinsCommands extends CommandBase {
                     int countSilver = 0;
                     for (ItemStack s : inventory.mainInventory)
                     {
-                        if (s != null && s.getItem() instanceof ItemCoinGold) countGold = countGold + s.getCount();
-                        if (s != null && s.getItem() instanceof ItemCoinSilver)countSilver = countSilver + s.getCount();
+                        if (s != null && s.getItem() instanceof ItemCoinGold)
+                        {
+                            countGold = countGold + s.getCount();
+                        }
+                        if (s != null && s.getItem() instanceof ItemCoinSilver)
+                        {
+                            countSilver = countSilver + s.getCount();
+                        }
                     }
                     inventory.clearMatchingItems(OrdinaryCoinsBase.coinGold, 0,countGold,null);
                     inventory.clearMatchingItems(OrdinaryCoinsBase.coinSilver, 0,countSilver,null);
-                    inventory.addItemStackToInventory(new ItemStack(OrdinaryCoinsBase.coinSilver, countGold * 100));
-                    inventory.addItemStackToInventory(new ItemStack(OrdinaryCoinsBase.coinBronze, countSilver * 100));
+                    inventory.addItemStackToInventory(new ItemStack(OrdinaryCoinsBase.coinSilver, countGold * ConfigHelper.coinsStackSize));
+                    inventory.addItemStackToInventory(new ItemStack(OrdinaryCoinsBase.coinBronze, countSilver * ConfigHelper.coinsStackSize));
                     sender.sendMessage(new TextComponentTranslation("coins.unstacked"));
                 }
                 return;

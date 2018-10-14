@@ -22,6 +22,7 @@ public class ConfigHelper {
 	public static int coinTypeWitch;
 	public static int repairCost;
 	public static int repairCoinType;
+	public static int coinsStackSize;
 	public static boolean repair;
 	public static boolean drop;
 	
@@ -29,7 +30,7 @@ public class ConfigHelper {
 	public static void setupConfig(Configuration config) {
 		try {
 			config.load();
-			drop = config.get("DropsAmount","drop",true,"Enable or disable coins drops from mobs").getBoolean(true);
+			drop = config.get("Main","drop",true,"Enable or disable coins drops from mobs").getBoolean(true);
 			amountZombie = config.get("Drops Amount", "amountZombie", 3, "How many coins will drop from zombies").getInt(3);
 			amountSkeleton = config.get("Drops Amount", "amountSkeleton", 3, "How many coins will drop from skeletons").getInt(3);
 			amountSpider = config.get("Drops Amount", "amountSpider", 5, "How many coins will drop from spiders").getInt(5);
@@ -45,6 +46,7 @@ public class ConfigHelper {
 			repair = config.get("Repairing","repair",true,"Enable or disable repairing items by coins").getBoolean(true);
 			repairCost = config.get("Repairing", "repairCost", 50, "How much does the item repairing?").getInt(50);
 			repairCoinType = config.get("Repairing", "repairCoinType", 1, "Which coins use to repairing? (0 - bronze, 1 - silver, 2 - gold)").getInt(0);
+			coinsStackSize = config.get("Main", "coinsStackSize", 100, "How many coins should be in a stack? (100 means that 1 silver coin = 100 bronze coins, 1 gold = 100 silver)").getInt(100);
 
 		} catch(Exception e) {
 			System.out.println("Error loading config file!");
