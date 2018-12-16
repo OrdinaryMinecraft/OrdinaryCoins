@@ -1,6 +1,7 @@
 item.coinBronze.name=Бронзовая монета
 item.coinSilver.name=Серебряная монета
 item.coinGold.name=Золотая монета
+item.coinPlatinum.name=Платиновая монета
 
 coins.stacked=Монеты обменяны.
 coins.unstacked=Монеты разменяны.
@@ -9,3 +10,4 @@ coins.cantrepair=Предмет не поврежден или его невоз
 coins.notenough.bronze=У вас в инвентаре недостаточно монет. Починка предмета стоит %d бронзовых монет.
 coins.notenough.silver=У вас в инвентаре недостаточно монет. Починка предмета стоит %d серебряных монет.
 coins.notenough.gold=У вас в инвентаре недостаточно монет. Починка предмета стоит %d золотых монет.
+coins.notenough.platinum=У вас в инвентаре недостаточно монет. Починка предмета стоит %d платиновых монет.

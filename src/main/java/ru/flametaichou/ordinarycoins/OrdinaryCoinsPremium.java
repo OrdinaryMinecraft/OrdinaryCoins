@@ -13,74 +13,59 @@ import net.minecraft.world.World;
 import java.util.ArrayList;
 import java.util.List;
 
-public class OrdinaryCoinsPremium extends CommandBase
-{
+public class OrdinaryCoinsPremium extends CommandBase {
     private final List<String> aliases;
 
-    public OrdinaryCoinsPremium()
-    {
+    public OrdinaryCoinsPremium() {
         aliases = new ArrayList<String>();
         aliases.add("premium");
     }
 
     @Override
-    public int getRequiredPermissionLevel()
-    {
+    public int getRequiredPermissionLevel() {
         return 0;
     }
 
     @Override
-    public int compareTo(Object o)
-    {
+    public int compareTo(Object o) {
         return 0;
     }
 
     @Override
-    public String getCommandName()
-    {
+    public String getCommandName() {
         return "premium";
     }
 
     @Override
-    public String getCommandUsage(ICommandSender var1)
-    {
+    public String getCommandUsage(ICommandSender var1) {
         return "/premium <repair>";
     }
 
     @Override
-    public List<String> getCommandAliases()
-    {
+    public List<String> getCommandAliases() {
         return this.aliases;
     }
 
     @Override
-    public void processCommand(ICommandSender sender, String[] argString)
-    {
+    public void processCommand(ICommandSender sender, String[] argString) {
         World world = sender.getEntityWorld();
 
-        if (!world.isRemote && ConfigHelper.premiumRepair)
-        {
-            if(argString.length == 0)
-            {
+        if (!world.isRemote && ConfigHelper.premiumRepair) {
+            if (argString.length == 0) {
                 sender.addChatMessage(new ChatComponentText("/premium <repair>"));
                 return;
             }
 
-            if (argString[0].equals("repair"))
-            {
-                if(sender instanceof EntityPlayer)
-                {
-                    EntityPlayer player = (EntityPlayer)sender;
+            if (argString[0].equals("repair")) {
+                if (sender instanceof EntityPlayer) {
+                    EntityPlayer player = (EntityPlayer) sender;
                     InventoryPlayer inventory = player.inventory;
 
                     ItemStack item = player.getHeldItem();
-                    if (item != null && item.isItemDamaged())
-                    {
+                    if (item != null && item.isItemDamaged()) {
                         item.setItemDamage(0);
                         sender.addChatMessage(new ChatComponentTranslation("coins.repaired"));
-                    }
-                    else
-                    {
+                    } else {
                         sender.addChatMessage(new ChatComponentTranslation("coins.cantrepair"));
                     }
 
@@ -91,20 +76,17 @@ public class OrdinaryCoinsPremium extends CommandBase
     }
 
     @Override
-    public boolean canCommandSenderUseCommand(ICommandSender var1)
-    {
+    public boolean canCommandSenderUseCommand(ICommandSender var1) {
         return true;
     }
 
     @Override
-    public List<?> addTabCompletionOptions(ICommandSender var1, String[] var2)
-    {
+    public List<?> addTabCompletionOptions(ICommandSender var1, String[] var2) {
         return null;
     }
 
     @Override
-    public boolean isUsernameIndex(String[] var1, int var2)
-    {
+    public boolean isUsernameIndex(String[] var1, int var2) {
         return false;
     }
 }
