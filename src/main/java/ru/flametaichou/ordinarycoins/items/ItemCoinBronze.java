@@ -1,19 +1,14 @@
 package ru.flametaichou.ordinarycoins.items;
 
-import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
-import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.client.model.ModelLoader;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import ru.flametaichou.ordinarycoins.OrdinaryCoinsBase;
 
 public class ItemCoinBronze extends Item {
 
 	public ItemCoinBronze() {
-		setRegistryName("coinBronze");        // The unique name (within your mod) that identifies this item
-		setUnlocalizedName(OrdinaryCoinsBase.MODID + ".coinBronze");     // Used for localization (en_US.lang)
+		setRegistryName("coinBronze");
+		setUnlocalizedName(OrdinaryCoinsBase.MODID + ".coinBronze");
 		this.setCreativeTab(CreativeTabs.MISC);
 	}
 }

@@ -23,5 +23,6 @@ public class ClientProxy extends CommonProxy {
         ModelLoader.setCustomModelResourceLocation(OrdinaryCoinsBase.coinBronze, 0, new ModelResourceLocation(OrdinaryCoinsBase.coinBronze.getRegistryName(), "inventory"));
         ModelLoader.setCustomModelResourceLocation(OrdinaryCoinsBase.coinSilver, 0, new ModelResourceLocation(OrdinaryCoinsBase.coinSilver.getRegistryName(), "inventory"));
         ModelLoader.setCustomModelResourceLocation(OrdinaryCoinsBase.coinGold, 0, new ModelResourceLocation(OrdinaryCoinsBase.coinGold.getRegistryName(), "inventory"));
+        ModelLoader.setCustomModelResourceLocation(OrdinaryCoinsBase.coinPlatinum, 0, new ModelResourceLocation(OrdinaryCoinsBase.coinPlatinum.getRegistryName(), "inventory"));
     }
 }

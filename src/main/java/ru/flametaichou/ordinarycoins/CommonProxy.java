@@ -10,6 +10,7 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import ru.flametaichou.ordinarycoins.items.ItemCoinBronze;
 import ru.flametaichou.ordinarycoins.items.ItemCoinGold;
+import ru.flametaichou.ordinarycoins.items.ItemCoinPlatinum;
 import ru.flametaichou.ordinarycoins.items.ItemCoinSilver;
 
 @Mod.EventBusSubscriber
@@ -32,6 +33,7 @@ public class CommonProxy {
         event.getRegistry().register(new ItemCoinBronze());
         event.getRegistry().register(new ItemCoinSilver());
         event.getRegistry().register(new ItemCoinGold());
+        event.getRegistry().register(new ItemCoinPlatinum());
     }
 }
 
