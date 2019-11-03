@@ -2,13 +2,13 @@
 {
   "modid": "ordinarycoins",
   "name": "Ordinary Coins",
-  "description": "Simple coins for your server economy.",
+  "description": "Simple mod that adds to minecraft 3 types of coins (e.g. for server economy). You can use it for shops, trade, chests loot, rewards, RPG and adventure maps, etc.",
   "version": "${version}",
   "mcversion": "${mcversion}",
-  "url": "",
+  "url": "https://www.curseforge.com/minecraft/mc-mods/ordinary-coins",
   "updateUrl": "",
   "authorList": ["flametaichou"],
-  "credits": "",
+  "credits": "ShadowWtP - for coin texture",
   "logoFile": "",
   "screenshots": [],
   "dependencies": []
