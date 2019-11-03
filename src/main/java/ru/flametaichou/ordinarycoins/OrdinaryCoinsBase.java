@@ -3,6 +3,7 @@ package ru.flametaichou.ordinarycoins;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
+import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.event.FMLServerStartingEvent;
 import cpw.mods.fml.common.registry.GameRegistry;
@@ -36,7 +37,7 @@ public class OrdinaryCoinsBase {
 	
 	@EventHandler
 	public void preLoad(FMLPreInitializationEvent event) {
-		ConfigHelper.setupConfig(new Configuration(event.getSuggestedConfigurationFile()));
+		ConfigHelper.setConfiguration(new Configuration(event.getSuggestedConfigurationFile()));
 		
 		coinBronze = new ItemCoinBronze().setUnlocalizedName("coinBronze").setTextureName("ordinarycoins:coinBronze");
 		GameRegistry.registerItem(coinBronze, "coinBronze");
@@ -50,5 +51,9 @@ public class OrdinaryCoinsBase {
 		coinPlatinum = new ItemCoinPlatinum().setUnlocalizedName("coinPlatinum").setTextureName("ordinarycoins:coinPlatinum");
 		GameRegistry.registerItem(coinPlatinum, "coinPlatinum");
 	}
-	
+
+	@EventHandler
+	public void postLoad(FMLPostInitializationEvent event) {
+		ConfigHelper.setupConfig();
+	}
 }

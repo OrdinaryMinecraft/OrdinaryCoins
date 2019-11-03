@@ -4,6 +4,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.monster.*;
+import net.minecraft.util.StatCollector;
 import net.minecraftforge.common.config.Configuration;
 
 import java.lang.reflect.Modifier;
@@ -13,8 +14,7 @@ import java.util.Map;
 
 public class ConfigHelper {
 
-    public ConfigHelper() {
-    }
+    private static Configuration config;
 
     public static int repairCost;
     public static int repairCoinType;
@@ -27,8 +27,14 @@ public class ConfigHelper {
     private static Map<Class, Integer> mobCoinAmounts = new HashMap<Class, Integer>();
     private static Map<Class, Integer> mobCoinTypes = new HashMap<Class, Integer>();
 
+    public ConfigHelper() {
+    }
 
-    public static void setupConfig(Configuration config) {
+    public static void setConfiguration(Configuration configuration) {
+        config = configuration;
+    }
+
+    public static void setupConfig() {
         try {
             config.load();
             loadEntitiesData(config);
@@ -161,6 +167,13 @@ public class ConfigHelper {
         if (s == null) {
             throw new IllegalStateException("Can't find entity name mapping in EntityList! Entity class: " + entityClass.getName());
         }
+
+        String[] parts = s.split("\\.");
+        if (parts.length > 1) {
+            s = parts[parts.length - 1];
+        }
+        s = s.substring(0, 1).toUpperCase() + s.substring(1);
+        s = s.replace(" ", "");
         return s;
     }
 }
