@@ -14,7 +14,7 @@ import ru.flametaichou.ordinarycoins.items.ItemCoinGold;
 import ru.flametaichou.ordinarycoins.items.ItemCoinPlatinum;
 import ru.flametaichou.ordinarycoins.items.ItemCoinSilver;
 
-@Mod (modid = "ordinarycoins", name = "Ordinary Coins", version = "1.4")
+@Mod (modid = "ordinarycoins", name = "Ordinary Coins", version = "1.5")
 
 public class OrdinaryCoinsBase {
 	
