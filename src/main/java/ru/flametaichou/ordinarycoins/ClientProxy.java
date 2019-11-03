@@ -1,6 +1,9 @@
 package ru.flametaichou.ordinarycoins;
 
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.SoundEvents;
+import net.minecraft.util.SoundCategory;
 import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.common.Mod;
@@ -13,6 +16,7 @@ import ru.flametaichou.ordinarycoins.items.ItemCoinSilver;
 
 @Mod.EventBusSubscriber(Side.CLIENT)
 public class ClientProxy extends CommonProxy {
+
     @Override
     public void preInit(FMLPreInitializationEvent e) {
         super.preInit(e);

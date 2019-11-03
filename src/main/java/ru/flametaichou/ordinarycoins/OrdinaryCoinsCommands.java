@@ -57,80 +57,45 @@ public class OrdinaryCoinsCommands extends CommandBase {
 
         if (!world.isRemote) {
             if (args.length == 0) {
-                sender.sendMessage(new TextComponentString("/coins <stack/unstack>"));
+                if (ConfigHelper.repair) {
+                    sender.sendMessage(new TextComponentString("/coins <stack/unstack/repair>"));
+                } else {
+                    sender.sendMessage(new TextComponentString("/coins <stack/unstack>"));
+                }
                 return;
             }
             if (args[0].equals("stack")) {
                 if (sender instanceof EntityPlayer) {
+                    // From chat
                     EntityPlayer player = (EntityPlayer) sender;
-                    InventoryPlayer inventory = player.inventory;
-                    int countBronze = 0;
-                    int countSilver = 0;
-                    int countGold = 0;
-                    for (ItemStack s : inventory.mainInventory) {
-                        if (s != null && s.getItem() instanceof ItemCoinBronze) {
-                            countBronze = countBronze + s.getCount();
-                        }
-                        if (s != null && s.getItem() instanceof ItemCoinSilver) {
-                            countSilver = countSilver + s.getCount();
-                        }
-                        if (s != null && s.getItem() instanceof ItemCoinGold) {
-                            countGold = countGold + s.getCount();
-                        }
+                    stackCoins(player);
+
+                } else {
+                    // From console
+                    if (args.length < 2) {
+                        System.out.println("[Ordinary Coins] Stack error: player name is not defined!");
+                        return;
                     }
-                    inventory.clearMatchingItems(OrdinaryCoinsBase.coinBronze, 0, countBronze, null);
-                    inventory.clearMatchingItems(OrdinaryCoinsBase.coinSilver, 0, countSilver, null);
-                    inventory.clearMatchingItems(OrdinaryCoinsBase.coinGold, 0, countGold, null);
-                    inventory.addItemStackToInventory(new ItemStack(OrdinaryCoinsBase.coinSilver, countBronze / ConfigHelper.coinsStackSize));
-                    inventory.addItemStackToInventory(new ItemStack(OrdinaryCoinsBase.coinBronze, countBronze % ConfigHelper.coinsStackSize));
-                    inventory.addItemStackToInventory(new ItemStack(OrdinaryCoinsBase.coinGold, countSilver / ConfigHelper.coinsStackSize));
-                    inventory.addItemStackToInventory(new ItemStack(OrdinaryCoinsBase.coinSilver, countSilver % ConfigHelper.coinsStackSize));
-                    inventory.addItemStackToInventory(new ItemStack(OrdinaryCoinsBase.coinPlatinum, countGold / ConfigHelper.coinsStackSize));
-                    inventory.addItemStackToInventory(new ItemStack(OrdinaryCoinsBase.coinGold, countGold % ConfigHelper.coinsStackSize));
-                    sender.sendMessage(new TextComponentTranslation("coins.stacked"));
+                    EntityPlayer player = world.getPlayerEntityByName(args[1]);
+                    stackCoins(player);
                 }
                 return;
             }
 
             if (args[0].equals("unstack")) {
                 if (sender instanceof EntityPlayer) {
+                    // From chat
                     EntityPlayer player = (EntityPlayer) sender;
-                    InventoryPlayer inventory = player.inventory;
-                    int countPlatinum = 0;
-                    int countGold = 0;
-                    int countSilver = 0;
-                    for (ItemStack s : inventory.mainInventory) {
-                        if (s != null && s.getItem() instanceof ItemCoinPlatinum) {
-                            countPlatinum = countPlatinum + s.getCount();
-                        }
-                        if (s != null && s.getItem() instanceof ItemCoinGold) {
-                            countGold = countGold + s.getCount();
-                        }
-                        if (s != null && s.getItem() instanceof ItemCoinSilver) {
-                            countSilver = countSilver + s.getCount();
-                        }
-                    }
-                    inventory.clearMatchingItems(OrdinaryCoinsBase.coinPlatinum, 0, countPlatinum, null);
-                    inventory.clearMatchingItems(OrdinaryCoinsBase.coinGold, 0, countGold, null);
-                    inventory.clearMatchingItems(OrdinaryCoinsBase.coinSilver, 0, countSilver, null);
+                    unstackCoins(player);
 
-                    if (countPlatinum > 0) {
-                        ItemStack is = new ItemStack(OrdinaryCoinsBase.coinGold, countPlatinum * ConfigHelper.coinsStackSize);
-                        //inventory.addItemStackToInventory(is);
-                        spawnEntityItemInWorld(is, player.world, player.posX, player.posY, player.posZ);
+                } else {
+                    // From console
+                    if (args.length < 2) {
+                        System.out.println("[Ordinary Coins] Unstack error: player name is not defined!");
+                        return;
                     }
-                    if (countGold > 0) {
-                        ItemStack is = new ItemStack(OrdinaryCoinsBase.coinSilver, countGold * ConfigHelper.coinsStackSize);
-                        //inventory.addItemStackToInventory(is);
-                        spawnEntityItemInWorld(is, player.world, player.posX, player.posY, player.posZ);
-                    }
-                    if (countSilver > 0) {
-                        ItemStack is = new ItemStack(OrdinaryCoinsBase.coinBronze, countSilver * ConfigHelper.coinsStackSize);
-                        //inventory.addItemStackToInventory(is);
-                        spawnEntityItemInWorld(is, player.world, player.posX, player.posY, player.posZ);
-                    }
-
-                    sender.sendMessage(new TextComponentTranslation("coins.unstacked"));
+                    EntityPlayer player = world.getPlayerEntityByName(args[1]);
+                    unstackCoins(player);
                 }
                 return;
             }
@@ -139,89 +104,125 @@ public class OrdinaryCoinsCommands extends CommandBase {
                 if (sender instanceof EntityPlayer) {
                     // From chat
                     EntityPlayer player = (EntityPlayer) sender;
-                    InventoryPlayer inventory = player.inventory;
+                    repairItemInHand(player);
 
-                    Item coin = pickCoinFromConfig();
-
-                    int countCoins = 0;
-                    for (ItemStack s : inventory.mainInventory) {
-                        if (s != null && s.getItem() == coin) {
-                            countCoins = countCoins + s.getCount();
-                        }
-                    }
-                    ItemStack item = player.getHeldItemMainhand();
-                    if (countCoins >= ConfigHelper.repairCost) {
-                        if (item != null && item.isItemDamaged()) {
-                            inventory.clearMatchingItems(coin, 0, ConfigHelper.repairCost, null);
-                            item.setItemDamage(0);
-                            sender.sendMessage(new TextComponentTranslation("coins.repaired"));
-                            //TODO: send packet to client to play sound
-                            //player.world.playSound(player, player.posX, player.posY, player.posZ, SoundEvents.BLOCK_ANVIL_USE, SoundCategory.PLAYERS, 1.1F, 1.1F);
-                        } else {
-                            sender.sendMessage(new TextComponentTranslation("coins.cantrepair"));
-                        }
-                    } else {
-                        switch (ConfigHelper.repairCoinType) {
-                            case 0:
-                                sender.sendMessage(new TextComponentTranslation("coins.notenough.bronze", ConfigHelper.repairCost));
-                                break;
-                            case 1:
-                                sender.sendMessage(new TextComponentTranslation("coins.notenough.silver", ConfigHelper.repairCost));
-                                break;
-                            case 2:
-                                sender.sendMessage(new TextComponentTranslation("coins.notenough.gold", ConfigHelper.repairCost));
-                                break;
-                            case 3:
-                                player.sendMessage(new TextComponentTranslation("coins.notenough.platinum", ConfigHelper.repairCost));
-                                break;
-                        }
-                    }
-                } else if (!(sender instanceof EntityPlayer)) {
+                } else {
                     // From console
                     if (args.length < 2) {
-                        System.out.println("Repair error: player name is not defined!");
+                        System.out.println("[Ordinary Coins] Repair error: player name is not defined!");
                         return;
                     }
                     EntityPlayer player = world.getPlayerEntityByName(args[1]);
-                    InventoryPlayer inventory = player.inventory;
-
-                    Item coin = pickCoinFromConfig();
-
-                    int countCoins = 0;
-                    for (ItemStack s : inventory.mainInventory) {
-                        if (s != null && s.getItem() == coin) {
-                            countCoins = countCoins + s.getCount();
-                        }
-                    }
-                    ItemStack item = player.getHeldItemMainhand();
-                    if (countCoins >= ConfigHelper.repairCost) {
-                        if (item != null && item.isItemDamaged()) {
-                            inventory.clearMatchingItems(coin, 0, ConfigHelper.repairCost, null);
-                            item.setItemDamage(0);
-                            player.sendMessage(new TextComponentTranslation("coins.repaired"));
-                            //TODO: send packet to client to play sound
-                            //player.world.playSound(player, player.posX, player.posY, player.posZ, SoundEvents.BLOCK_ANVIL_USE, SoundCategory.PLAYERS, 1.1F, 1.1F);
-                        } else {
-                            player.sendMessage(new TextComponentTranslation("coins.cantrepair"));
-                        }
-                    } else {
-                        switch (ConfigHelper.repairCoinType) {
-                            case 0:
-                                player.sendMessage(new TextComponentTranslation("coins.notenough.bronze", ConfigHelper.repairCost));
-                                break;
-                            case 1:
-                                player.sendMessage(new TextComponentTranslation("coins.notenough.silver", ConfigHelper.repairCost));
-                                break;
-                            case 2:
-                                player.sendMessage(new TextComponentTranslation("coins.notenough.gold", ConfigHelper.repairCost));
-                                break;
-                            case 3:
-                                player.sendMessage(new TextComponentTranslation("coins.notenough.platinum", ConfigHelper.repairCost));
-                                break;
-                        }
-                    }
+                    repairItemInHand(player);
                 }
                 return;
+            }
+        }
+    }
+
+    private void stackCoins(EntityPlayer player) {
+        InventoryPlayer inventory = player.inventory;
+        int countBronze = 0;
+        int countSilver = 0;
+        int countGold = 0;
+        for (ItemStack s : inventory.mainInventory) {
+            if (s != null && s.getItem() instanceof ItemCoinBronze) {
+                countBronze = countBronze + s.getCount();
+            }
+            if (s != null && s.getItem() instanceof ItemCoinSilver) {
+                countSilver = countSilver + s.getCount();
+            }
+            if (s != null && s.getItem() instanceof ItemCoinGold) {
+                countGold = countGold + s.getCount();
+            }
+        }
+        inventory.clearMatchingItems(OrdinaryCoinsBase.coinBronze, 0, countBronze, null);
+        inventory.clearMatchingItems(OrdinaryCoinsBase.coinSilver, 0, countSilver, null);
+        inventory.clearMatchingItems(OrdinaryCoinsBase.coinGold, 0, countGold, null);
+        inventory.addItemStackToInventory(new ItemStack(OrdinaryCoinsBase.coinSilver, countBronze / ConfigHelper.coinsStackSize));
+        inventory.addItemStackToInventory(new ItemStack(OrdinaryCoinsBase.coinBronze, countBronze % ConfigHelper.coinsStackSize));
+        inventory.addItemStackToInventory(new ItemStack(OrdinaryCoinsBase.coinGold, countSilver / ConfigHelper.coinsStackSize));
+        inventory.addItemStackToInventory(new ItemStack(OrdinaryCoinsBase.coinSilver, countSilver % ConfigHelper.coinsStackSize));
+        inventory.addItemStackToInventory(new ItemStack(OrdinaryCoinsBase.coinPlatinum, countGold / ConfigHelper.coinsStackSize));
+        inventory.addItemStackToInventory(new ItemStack(OrdinaryCoinsBase.coinGold, countGold % ConfigHelper.coinsStackSize));
+        player.sendMessage(new TextComponentTranslation("coins.stacked"));
+    }
+
+    private void unstackCoins(EntityPlayer player) {
+        InventoryPlayer inventory = player.inventory;
+        int countPlatinum = 0;
+        int countGold = 0;
+        int countSilver = 0;
+        for (ItemStack s : inventory.mainInventory) {
+            if (s != null && s.getItem() instanceof ItemCoinPlatinum) {
+                countPlatinum = countPlatinum + s.getCount();
+            }
+            if (s != null && s.getItem() instanceof ItemCoinGold) {
+                countGold = countGold + s.getCount();
+            }
+            if (s != null && s.getItem() instanceof ItemCoinSilver) {
+                countSilver = countSilver + s.getCount();
+            }
+        }
+        inventory.clearMatchingItems(OrdinaryCoinsBase.coinPlatinum, 0, countPlatinum, null);
+        inventory.clearMatchingItems(OrdinaryCoinsBase.coinGold, 0, countGold, null);
+        inventory.clearMatchingItems(OrdinaryCoinsBase.coinSilver, 0, countSilver, null);
+
+        if (countPlatinum > 0) {
+            ItemStack is = new ItemStack(OrdinaryCoinsBase.coinGold, countPlatinum * ConfigHelper.coinsStackSize);
+            //inventory.addItemStackToInventory(is);
+            spawnEntityItemInWorld(is, player.world, player.posX, player.posY, player.posZ);
+        }
+        if (countGold > 0) {
+            ItemStack is = new ItemStack(OrdinaryCoinsBase.coinSilver, countGold * ConfigHelper.coinsStackSize);
+            //inventory.addItemStackToInventory(is);
+            spawnEntityItemInWorld(is, player.world, player.posX, player.posY, player.posZ);
+        }
+        if (countSilver > 0) {
+            ItemStack is = new ItemStack(OrdinaryCoinsBase.coinBronze, countSilver * ConfigHelper.coinsStackSize);
+            //inventory.addItemStackToInventory(is);
+            spawnEntityItemInWorld(is, player.world, player.posX, player.posY, player.posZ);
+        }
+
+        player.sendMessage(new TextComponentTranslation("coins.unstacked"));
+    }
+
+    private void repairItemInHand(EntityPlayer player) {
+        InventoryPlayer inventory = player.inventory;
+
+        Item coin = pickCoinFromConfig();
+
+        int countCoins = 0;
+        for (ItemStack s : inventory.mainInventory) {
+            if (s != null && s.getItem() == coin) {
+                countCoins = countCoins + s.getCount();
+            }
+        }
+        ItemStack item = player.getHeldItemMainhand();
+        if (countCoins >= ConfigHelper.repairCost) {
+            if (item != null && item.isItemDamaged()) {
+                inventory.clearMatchingItems(coin, 0, ConfigHelper.repairCost, null);
+                item.setItemDamage(0);
+                player.sendMessage(new TextComponentTranslation("coins.repaired"));
+                //TODO: send packet to client to play sound
+                //player.world.playSound(player, player.posX, player.posY, player.posZ, SoundEvents.BLOCK_ANVIL_USE, SoundCategory.PLAYERS, 1.1F, 1.1F);
+            } else {
+                player.sendMessage(new TextComponentTranslation("coins.cantrepair"));
+            }
+        } else {
+            switch (ConfigHelper.repairCoinType) {
+                case 0:
+                    player.sendMessage(new TextComponentTranslation("coins.notenough.bronze", ConfigHelper.repairCost));
+                    break;
+                case 1:
+                    player.sendMessage(new TextComponentTranslation("coins.notenough.silver", ConfigHelper.repairCost));
+                    break;
+                case 2:
+                    player.sendMessage(new TextComponentTranslation("coins.notenough.gold", ConfigHelper.repairCost));
+                    break;
+                case 3:
+                    player.sendMessage(new TextComponentTranslation("coins.notenough.platinum", ConfigHelper.repairCost));
+                    break;
             }
         }
     }

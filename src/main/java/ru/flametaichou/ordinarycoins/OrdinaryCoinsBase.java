@@ -25,7 +25,7 @@ public class OrdinaryCoinsBase {
 
     public static final String MODID = "ordinarycoins";
     public static final String MODNAME = "Ordinary Coins";
-    public static final String VERSION = "1.4";
+    public static final String VERSION = "1.5";
 
     @SidedProxy(clientSide = "ru.flametaichou.ordinarycoins.ClientProxy", serverSide = "ru.flametaichou.ordinarycoins.ServerProxy")
     public static CommonProxy proxy;

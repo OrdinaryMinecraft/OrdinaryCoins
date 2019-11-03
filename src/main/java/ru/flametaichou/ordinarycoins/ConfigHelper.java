@@ -1,55 +1,48 @@
 package ru.flametaichou.ordinarycoins;
 
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityList;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.item.EntityArmorStand;
+import net.minecraft.entity.monster.*;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.config.Configuration;
+import net.minecraftforge.fml.common.registry.EntityEntry;
+import net.minecraftforge.fml.common.registry.ForgeRegistries;
+
+import java.lang.reflect.Modifier;
+import java.util.HashMap;
+import java.util.Map;
 
 public class ConfigHelper {
 
 	public ConfigHelper() {
-		
 	}
-	
-	public static int amountZombie;
-	public static int amountSkeleton;
-	public static int amountSpider;
-	public static int amountEnderman;
-	public static int amountCreeper;
-	public static int amountWitch;
-	public static int coinTypeZombie;
-	public static int coinTypeSkeleton;
-	public static int coinTypeSpider;
-	public static int coinTypeEnderman;
-	public static int coinTypeCreeper;
-	public static int coinTypeWitch;
+
 	public static int repairCost;
 	public static int repairCoinType;
 	public static int coinsStackSize;
 	public static boolean repair;
 	public static boolean drop;
+
+	private static Map<Class, Integer> mobCoinAmounts = new HashMap<Class, Integer>();
+	private static Map<Class, Integer> mobCoinTypes = new HashMap<Class, Integer>();
 	
 	
 	public static void setupConfig(Configuration config) {
 		try {
 			config.load();
+			loadEntitiesData(config);
+
 			drop = config.get("Main","drop",true,"Enable or disable coins drops from mobs").getBoolean(true);
-			amountZombie = config.get("Drops Amount", "amountZombie", 3, "How many coins will drop from zombies").getInt(3);
-			amountSkeleton = config.get("Drops Amount", "amountSkeleton", 3, "How many coins will drop from skeletons").getInt(3);
-			amountSpider = config.get("Drops Amount", "amountSpider", 5, "How many coins will drop from spiders").getInt(5);
-			amountEnderman = config.get("Drops Amount", "amountEnderman", 50, "How many coins will drop from endermen").getInt(50);
-			amountCreeper = config.get("Drops Amount", "amountCreeper", 5, "How many coins will drop from creepers").getInt(5);
-			amountWitch = config.get("Drops Amount", "amountWitch", 50, "How many coins will drop from witches").getInt(50);
-			coinTypeZombie = config.get("Coins Type", "coinTypeZombie", 0, "Which coins use to drop from zombies? (0 - bronze, 1 - silver, 2 - gold, 3 - platinum)").getInt(0);
-			coinTypeSkeleton = config.get("Coins Type", "coinTypeSkeleton", 0, "Which coins use to drop from skeletons? (0 - bronze, 1 - silver, 2 - gold, 3 - platinum)").getInt(0);
-			coinTypeSpider = config.get("Coins Type", "coinTypeSpider", 0, "Which coins use to drop from spiders? (0 - bronze, 1 - silver, 2 - gold, 3 - platinum)").getInt(0);
-			coinTypeEnderman = config.get("Coins Type", "coinTypeEnderman", 0, "Which coins use to drop from endermen? (0 - bronze, 1 - silver, 2 - gold, 3 - platinum)").getInt(0);
-			coinTypeCreeper = config.get("Coins Type", "coinTypeCreeper", 0, "Which coins use to drop from creepers? (0 - bronze, 1 - silver, 2 - gold, 3 - platinum)").getInt(0);
-			coinTypeWitch = config.get("Coins Type", "coinTypeWitch", 0, "Which coins use to drop from witches? (0 - bronze, 1 - silver, 2 - gold, 3 - platinum)").getInt(0);
 			repair = config.get("Repairing","repair",true,"Enable or disable repairing items by coins").getBoolean(true);
 			repairCost = config.get("Repairing", "repairCost", 50, "How much does the item repairing?").getInt(50);
 			repairCoinType = config.get("Repairing", "repairCoinType", 1, "Which coins use to repairing? (0 - bronze, 1 - silver, 2 - gold, 3 - platinum)").getInt(0);
 			coinsStackSize = config.get("Main", "coinsStackSize", 100, "How many coins should be in a stack? (100 means that 1 silver coin = 100 bronze coins, 1 gold = 100 silver)").getInt(100);
 
 		} catch(Exception e) {
-			System.out.println("Error loading config file!");
+			System.out.println("[Ordinary Coins] Error occurred on loading config file!");
+			e.printStackTrace();
 		} finally {
 			if(config.hasChanged()) {
 				config.save();
@@ -57,4 +50,96 @@ public class ConfigHelper {
 		}
 	}
 
+	private static void loadEntitiesData(Configuration config) {
+		for (ResourceLocation resourceLocation : EntityList.getEntityNameList()) {
+			if (resourceLocation == EntityList.LIGHTNING_BOLT) {
+				continue;
+			}
+
+			EntityEntry entry = ForgeRegistries.ENTITIES.getValue(resourceLocation);
+			if (entry == null) {
+				System.out.println("[Ordinary Coins] Can't find entityEntry for entity: " + resourceLocation.getResourcePath());
+				continue;
+			}
+
+			String entityName = entry.getName();
+			Class entityClass = entry.getEntityClass();
+			if (entityClass == null) {
+				System.out.println("[Ordinary Coins] Can't find entityClass for entry: " + entityName);
+				continue;
+			}
+
+			try {
+				if (Modifier.isAbstract(entityClass.getModifiers()) || entityClass == EntityArmorStand.class) {
+					// Skip classes like EntityLiving, EntityMob, EntityArmorStand
+					continue;
+				}
+				if (isEntityLiving(entityClass)) {
+					int defaultAmount = 0;
+					if (entityClass == EntityZombie.class) {
+						defaultAmount = 3;
+
+					} else if (entityClass == EntitySkeleton.class) {
+						defaultAmount = 3;
+
+					} else if (entityClass == EntitySpider.class) {
+						defaultAmount = 5;
+
+					} else if (entityClass == EntityEnderman.class) {
+						defaultAmount = 50;
+
+					} else if (entityClass == EntityCreeper.class) {
+						defaultAmount = 5;
+
+					} else if (entityClass == EntityWitch.class) {
+						defaultAmount = 50;
+
+					}
+					int amount = config.get(
+							"Drops Amount",
+							"amount" + entityName,
+							defaultAmount,
+							"How many coins will drop from " + entityName.toLowerCase()
+					).getInt(defaultAmount);
+					mobCoinAmounts.put(entityClass, amount);
+
+					int defaultCoinType = 0;
+					int coinType = config.get(
+							"Coins Type",
+							"coinType" + entityName,
+							defaultCoinType,
+							"Which coins use to drop from " + entityName.toLowerCase() + "? (0 - bronze, 1 - silver, 2 - gold, 3 - platinum)"
+					).getInt(defaultCoinType);
+					mobCoinTypes.put(entityClass, coinType);
+				}
+			} catch (Exception e) {
+				System.out.println("[Ordinary Coins] Error occurred on configuring entity: " + entityClass.getName());
+				e.printStackTrace();
+			}
+		}
+	}
+
+	public static int getCoinsAmount(Class entityClass) {
+		return (mobCoinAmounts.get(entityClass) != null) ? mobCoinAmounts.get(entityClass) : 0;
+	}
+
+	public static int getCoinsType(Class entityClass) {
+		return (mobCoinTypes.get(entityClass) != null) ? mobCoinTypes.get(entityClass) : 0;
+	}
+
+	private static boolean isEntityLiving(Class entityClass) {
+		Class parent = entityClass.getSuperclass();
+		while (parent != null) {
+			if (EntityLivingBase.class == parent) {
+				return true;
+			}
+
+			if (Entity.class == parent) {
+				return false;
+			}
+
+			parent = parent.getSuperclass();
+		}
+		return false;
+	}
 }

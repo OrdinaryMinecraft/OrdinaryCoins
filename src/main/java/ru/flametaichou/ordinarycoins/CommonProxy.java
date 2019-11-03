@@ -1,7 +1,10 @@
 package ru.flametaichou.ordinarycoins;
 
 import net.minecraft.block.Block;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.SoundEvents;
 import net.minecraft.item.Item;
+import net.minecraft.util.SoundCategory;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
@@ -15,6 +18,7 @@ import ru.flametaichou.ordinarycoins.items.ItemCoinSilver;
 
 @Mod.EventBusSubscriber
 public class CommonProxy {
+
     public void preInit(FMLPreInitializationEvent e) {
     }
 
