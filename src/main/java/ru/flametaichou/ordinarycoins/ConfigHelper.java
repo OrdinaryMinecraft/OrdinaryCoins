@@ -16,8 +16,7 @@ import java.util.Map;
 
 public class ConfigHelper {
 
-	public ConfigHelper() {
-	}
+	private static Configuration config;
 
 	public static int repairCost;
 	public static int repairCoinType;
@@ -27,9 +26,15 @@ public class ConfigHelper {
 
 	private static Map<Class, Integer> mobCoinAmounts = new HashMap<Class, Integer>();
 	private static Map<Class, Integer> mobCoinTypes = new HashMap<Class, Integer>();
+
+	public ConfigHelper() {
+	}
+
+	public static void setConfiguration(Configuration configuration) {
+		config = configuration;
+	}
 	
-	
-	public static void setupConfig(Configuration config) {
+	public static void setupConfig() {
 		try {
 			config.load();
 			loadEntitiesData(config);
@@ -62,7 +67,7 @@ public class ConfigHelper {
 				continue;
 			}
 
-			String entityName = entry.getName();
+			String entityName = getEntityName(entry);
 			Class entityClass = entry.getEntityClass();
 			if (entityClass == null) {
 				System.out.println("[Ordinary Coins] Can't find entityClass for entry: " + entityName);
@@ -141,5 +146,12 @@ public class ConfigHelper {
 			parent = parent.getSuperclass();
 		}
 		return false;
+	}
+
+	private static String getEntityName(EntityEntry entry) {
+		String s = entry.getName();
+		s = s.substring(0, 1).toUpperCase() + s.substring(1);
+		s = s.replace(" ", "");
+		return s;
 	}
 }

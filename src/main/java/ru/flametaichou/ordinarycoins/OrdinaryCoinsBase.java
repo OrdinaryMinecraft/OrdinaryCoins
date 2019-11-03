@@ -75,7 +75,12 @@ public class OrdinaryCoinsBase {
 
     @EventHandler
     public void preLoad(FMLPreInitializationEvent event) {
-        ConfigHelper.setupConfig(new Configuration(event.getSuggestedConfigurationFile()));
+        ConfigHelper.setConfiguration(new Configuration(event.getSuggestedConfigurationFile()));
+    }
+
+    @EventHandler
+    public void postLoad(FMLPostInitializationEvent event) {
+        ConfigHelper.setupConfig();
     }
 
 }
